@@ -4,3 +4,4 @@ ipython
 numpy
 scipy
 matplotlib
+blockdiag

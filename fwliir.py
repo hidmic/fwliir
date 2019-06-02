@@ -313,15 +313,11 @@ def eaSimplePlusElitism(population, toolbox, cxpb, mutpb, eprop, ngen,
         if halloffame is not None:
             halloffame.update(offspring)
 
-        # Reemplaza la población de individuos con su descendencia,
-        # a excepción de la elite de la población actual que toma
-        # el lugar de los peores en su descendencia.
+        # Reemplaza la población actual con los mejores del conjunto
+        # compuesta por su descendencia y la elite.
         elite_count = int(len(population) * eprop)
-        bests_count = len(population) - elite_count
-        bests = tools.selBest(offspring, bests_count)
         elite = tools.selBest(population, elite_count)
-
-        population[:] = bests + elite
+        population[:] = tools.selBest(offspring + elite, len(population))
 
         # Toma nota de las estadísticas de la generación actual.
         record = stats.compile(population) if stats else {}
