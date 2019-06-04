@@ -14,8 +14,8 @@ creator.create(
 creator.create(
     'IIR', list, fitness=creator.ResponseMismatch, nbits=int
 )
-
 IIR = creator.IIR
+
 
 def fitfwlsos(sos, nbits):
     """
@@ -109,29 +109,6 @@ def fwliir2sos(iir):
         for sos in iir
     ])
 
-# def fitSigmaScaling(func):
-#     @functools.wraps(func)
-#     def wrapper(individuals, *args, fit_attr='fitness', **kwargs):
-#         population_fitness = [
-#             getattr(ind, fit_attr).values
-#             for ind in individuals
-#             if getattr(ind, fit_attr).valid
-#         ]
-#         population_fitness_mean = np.mean(population_fitness, axis=0)
-#         population_fitness_std = np.std(population_fitness, axis=0)
-#         population_fitness_baseline = np.clip(
-#             population_fitness_mean - 2. * population_fitness_std, 0., None
-#         )
-#         for ind in individuals:
-#             fitness = getattr(ind, fit_attr)
-#             if not fitness.valid:
-#                 continue
-#             fitness.values = np.clip(
-#                 np.array(fitness.values) - population_fitness_baseline, 0., None
-#             ).tolist()
-#         return func(individuals, *args, fit_attr=fit_attr, **kwargs)
-#     return wrapper
-
 
 def genStablePrototype(nlimit, nbits=32):
     """
@@ -180,6 +157,7 @@ def genStablePrototype(nlimit, nbits=32):
         # Preserva el número de bits en el filtro.
         iir.nbits = nbits
     return iir
+
 
 def cxUniformND(iir1, iir2, ndpb):
     """
@@ -326,6 +304,7 @@ def eaSimplePlusElitism(population, toolbox, cxpb, mutpb, eprop, ngen,
             print(logbook.stream)
 
     return population, logbook
+
 
 def configure_genetic_approx(*, nbits=16, nlimit=8, nsln=3, cxpb=0.7, ndpb=0.5,
                              mutpb=0.2, mutmean=0.0, mutstd=0.3, coeffpb=0.1,
