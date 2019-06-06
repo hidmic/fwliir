@@ -1,7 +1,7 @@
 deap
-jupyter
-ipython
 numpy
 scipy
+ipython
+jupyter
 matplotlib
-blockdiag
+jupyter_contrib_nbextensions

@@ -141,13 +141,12 @@ def genStablePrototype(nlimit, nbits=32):
     # Introduce N etapas de segundo orden para alcanzar
     # el orden seleccionado.
     for _ in range(order // 2):
-        # Ceros y polos de la etapa se ubican dentro o sobre
-        # el círculo unidad.
+        # Ceros y polos de la etapa se ubican dentro del círculo unidad.
         b0 = n
-        b2 = np.random.randint(-n, n-1)
-        a2 = np.random.randint(-n, n-1)
-        b1 = np.random.randint(-b2-n, b2+n) if b2 != -n else 0
-        a1 = np.random.randint(-a2-n, a2+n) if a2 != -n else 0
+        b2 = np.random.randint(-n+1, n-1)
+        a2 = np.random.randint(-n+1, n-1)
+        b1 = np.random.randint(-b2-n, b2+n)
+        a1 = np.random.randint(-a2-n, a2+n)
         sos = np.array([b0, b1, b2, a1, a2, 1])
         # Ajusta la ganancia de la sección para su representación.
         fitfwlsos(sos, nbits)
