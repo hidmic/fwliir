@@ -17,7 +17,7 @@ creator.create(
 IIR = creator.IIR
 
 
-def fitfwlsos(sos, nbits):
+def fitsos(sos, nbits):
     """
     Ajusta la ganancia de una etapa de segundo orden en punto fijo
     para que sus coeficientes puedan representarse en 1.(`nbits`-1)
@@ -40,7 +40,7 @@ def fitfwlsos(sos, nbits):
     return sos
 
 
-def fwliirimpulse(iir, ts, n):
+def impulse(iir, ts, n):
     """
     Computa la respuesta al impulso de un filtro digital IIR
     en punto fijo.
@@ -90,7 +90,7 @@ def fwliirimpulse(iir, ts, n):
     return t, im
 
 
-def fwliir2sos(iir):
+def iir2sos(iir):
     """
     Convierte un filtro digital IIR en punto fijo a su representación
     como secuencia de secciones de segundo orden en punto flotante (ver
@@ -135,7 +135,7 @@ def genStablePrototype(nlimit, nbits=32):
         a1 = np.random.randint(-n, n-1)
         sos = np.array([b0, b1, 0, a1, 0, 1])
         # Ajusta la ganancia de la sección para su representación.
-        fitfwlsos(sos, nbits)
+        fitsos(sos, nbits)
         # Incorpora la etapa al filtro.
         iir.append(sos)
     # Introduce N etapas de segundo orden para alcanzar
@@ -149,7 +149,7 @@ def genStablePrototype(nlimit, nbits=32):
         a1 = np.random.randint(-a2-n, a2+n)
         sos = np.array([b0, b1, b2, a1, a2, 1])
         # Ajusta la ganancia de la sección para su representación.
-        fitfwlsos(sos, nbits)
+        fitsos(sos, nbits)
         # Incorpora la etapa al filtro.
         iir.append(sos)
     if hasattr(iir, 'nbits'):
@@ -187,11 +187,11 @@ def cxUniformND(iir1, iir2, ndpb):
         # Ajusta la ganancia de la primera sección para que los
         # coeficientes del filtro puedan representarse en punto
         # fijo para el número de bits del filtro candidato.
-        fitfwlsos(sos1, iir1.nbits)
+        fitsos(sos1, iir1.nbits)
         # Ajusta la ganancia de la primera sección para que los
         # coeficientes del filtro puedan representarse en punto
         # fijo para el número de bits del filtro candidato.
-        fitfwlsos(sos2, iir2.nbits)
+        fitsos(sos2, iir2.nbits)
     return iir1, iir2
 
 
@@ -210,7 +210,7 @@ def evTimeResponse(iir, target, ts):
     # Computa la respuesta al impulso del filtro candidato
     # en su representación SOS.
     _, (im,) = signal.dimpulse(
-        (*signal.sos2tf(fwliir2sos(iir)), ts), n=len(target)
+        (*signal.sos2tf(iir2sos(iir)), ts), n=len(target)
     )
     # Computa el error relativo entre respuesta al impulso
     # del filtro candidato y respuesta al impulso esperada.
@@ -246,7 +246,7 @@ def mutCoeffGaussian(iir, mu, sigma, indpb):
         # Ajusta la ganancia de la sección para que los coeficientes
         # del filtro puedan representarse en punto fijo para el
         # número de bits del filtro.
-        fitfwlsos(sos, iir.nbits)
+        fitsos(sos, iir.nbits)
     return iir,
 
 
@@ -305,9 +305,10 @@ def eaSimplePlusElitism(population, toolbox, cxpb, mutpb, eprop, ngen,
     return population, logbook
 
 
-def configure_genetic_approx(*, nbits=16, nlimit=8, nsln=3, cxpb=0.7, ndpb=0.5,
+def configure_genetic_approx(*, nbits=16, nlimit=8, nsln=10, cxpb=0.7, ndpb=0.5,
                              mutpb=0.2, mutmean=0.0, mutstd=0.3, coeffpb=0.1,
-                             tournsize=5, poolsize=1000, eprop=0.01, ngen=400):
+                             tournsize=3, nind=1000, eprop=0.005, ngen=400,
+                             verbose=__debug__):
     """
     Configura una función de aproximación de filtros digitales IIR en punto
     fijo con una dada respuesta al impulso.
@@ -328,7 +329,7 @@ def configure_genetic_approx(*, nbits=16, nlimit=8, nsln=3, cxpb=0.7, ndpb=0.5,
       una solución seleccionada para la mutación.
     :param tournsize: cantidad de soluciones a someter en cada instancia
       de torneo de selección.
-    :param poolsize: cantidad de soluciones en el pool genético a explorar.
+    :param nind: cantidad de soluciones en el pool genético a explorar.
     :param eprop: proporción de elitismo o la cantidad de soluciones de elite
       respecto al total de soluciones en el pool.
     :param ngen: cantidad de generaciones a evolucionar.
@@ -363,10 +364,10 @@ def configure_genetic_approx(*, nbits=16, nlimit=8, nsln=3, cxpb=0.7, ndpb=0.5,
         stats = tools.Statistics(
             lambda individual: individual.fitness.values
         )
-        stats.register('fitness_mean', np.mean)
-        stats.register('fitness_std', np.std)
-        stats.register('fitness_min', np.min)
-        stats.register('fitness_max', np.max)
+        stats.register('mean_fitness', np.mean)
+        stats.register('fitness_stddev', np.std)
+        stats.register('min_fitness', np.min)
+        stats.register('max_fitness', np.max)
 
         hall = tools.HallOfFame(
             maxsize=nsln, similar=lambda x, y: (
@@ -375,10 +376,11 @@ def configure_genetic_approx(*, nbits=16, nlimit=8, nsln=3, cxpb=0.7, ndpb=0.5,
             )
         )
 
-        population = toolbox.population(poolsize)
+        population = toolbox.population(nind)
         offspring, logbook = eaSimplePlusElitism(
             population, toolbox, cxpb=cxpb, mutpb=mutpb,
-            eprop=eprop, ngen=ngen, stats=stats, halloffame=hall
+            eprop=eprop, ngen=ngen, stats=stats, halloffame=hall,
+            verbose=verbose
         )
 
         return hall, offspring, logbook
@@ -401,15 +403,15 @@ if __name__ == '__main__':
 
     iir_min_err = best[0]
     print('Minimum error', iir_min_err, len(iir_min_err))
-    sos_min_err = fwliir2sos(iir_min_err)
+    sos_min_err = iir2sos(iir_min_err)
     _, h_min_err = signal.sosfreqz(sos_min_err, worN=w)
-    _, im_min_err = fwliirimpulse(iir_min_err, ts, n)
+    _, im_min_err = impulse(iir_min_err, ts, n)
 
     iir_min_n = sorted(best, key=lambda iir: len(iir))[0]
     print('Minimum order', iir_min_n, len(iir_min_n))
-    sos_min_n = fwliir2sos(iir_min_n)
+    sos_min_n = iir2sos(iir_min_n)
     _, h_min_n = signal.sosfreqz(sos_min_n, worN=w)
-    _, im_min_n = fwliirimpulse(iir_min_n, ts, n)
+    _, im_min_n = impulse(iir_min_n, ts, n)
 
     import matplotlib.pyplot as plt
 
