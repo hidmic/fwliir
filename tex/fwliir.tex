@@ -481,8 +481,8 @@ por el siguiente diagrama de flujo:
     
 
     Una población inicial de individuos, en principio generada de forma
-aleatoria -pero bien puede ser el resultado de conocimiento o procesos
-previos-, es seleccionada en función de la aptitud de su fenotipo (o
+aleatoria (pero bien puede ser el resultado de conocimiento o procesos
+previos), es seleccionada en función de la aptitud de su fenotipo (o
 conjunto de características observables) y luego sometida a operadores
 de cruza y mutación de su genotipo (o conjunto de genes que codifica
 dichas características) para generar descendencia. Esta operatoria se
@@ -522,7 +522,7 @@ desempeño. La sensibilidad a los errores numéricos crece con el orden.
 Las sumas parciales pueden ocasionar el desborde o saturación de los
 acumuladores que las almacenan. La decomposición en secciones
 bicuadráticas, de segundo orden, y su ordenamiento tal que se minimize
-la posibilidad de desborde o saturación es una solución tipica en
+la posibilidad de desborde o saturación es una solución típica en
 implementaciones tradicionales a estos problemas.
 
 Con estas consideraciones, el genotipo de cada filtro queda conformado
@@ -556,7 +556,7 @@ mantenerlos en el intervalo de valores representables.
 \subparagraph{Evaluación}\label{evaluaciuxf3n}
 
 La aptitud de cada filtro se evalúa en relación al desempeño deseado. En
-la síntesis tradicional, el filtro exhibe un respuesta al impulso o una
+la síntesis tradicional, el filtro exhibe una respuesta al impulso o una
 respuesta en frecuencia dadas o con ciertas características a partir de
 la utilización de teoría de aproximación, muestreo, convolución con
 ventanas, etc. En este caso, de forma empírica se ha determinado que la
@@ -620,8 +620,8 @@ Los operadores de cruza binaria, como ser el de corte en uno o dos
 puntos aplicados sobre la secuencia completa de coeficientes, no ha
 mostrado buen desempeño, probablemente atribuible a la elevada
 variabilidad que introducen en el punto de corte (considerando el peso
-desigual de cada bit en una representación numérica binaria) y sólo en
-el punto de corte.
+desigual de cada bit en una representación numérica binaria) y
+únicamente en el punto de corte.
 
 La cruza uniforme de secciones de segundo orden, es decir el intercambio
 probable de a pares ordenados de secciones de los progenitores para dar
@@ -683,7 +683,7 @@ proceso evolutivo para luego optar por los más simples.
 
 \subparagraph{Historial de más aptos}\label{historial-de-muxe1s-aptos}
 
-Los más individuos más aptos a lo largo de todas las generaciones son
+Los individuos más aptos a lo largo de todas las generaciones son
 conservados, evitando perder buenas soluciones producto del caracter
 aleatorio del proceso evolutivo.
 
@@ -702,7 +702,7 @@ prematura.
 
 \subparagraph{Condición de término}\label{condiciuxf3n-de-tuxe9rmino}
 
-El algoritmo avanza la población a lo largo de un número fijo de
+El algoritmo avanza a la población a lo largo de un número fijo de
 generaciones.
 
 \pagebreak
@@ -1123,7 +1123,7 @@ Se reproduce debajo:
 
     \subsubsection{Desempeño}\label{desempeuxf1o}
 
-En lo siguiente, se aproximan las respuestas impulsionales de filtros
+A continuación, se aproximan las respuestas impulsionales de filtros
 aproximados analíticamente y se contrastan los resultados obtenidos por
 el algoritmo para un filtro IIR en punto fijo 1.15 (típico Q15 de 16
 bits) con la solución cerrada. En cada una de las comparaciones que
