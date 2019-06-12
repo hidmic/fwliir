@@ -589,7 +589,7 @@ es la varianza de dicho error relativo \(er_k\). El valor apropiado de N
 dependerá de cada respuesta a aproximar.
 
 Observar que el denominador de la función \(f_k\) es numéricamente
-equivalente a la potencia de \(er_k\) entendida como variable aleatoria.
+equivalente a la energía de \(er_k\) entendida como variable aleatoria.
 
 Es importante mencionar, sin embargo, que el cómputo de la respuesta
 impulsional \(h_k\) durante y sólo durante la evaluación del filtro se
@@ -604,26 +604,28 @@ la aptitud, o bien una estratificación construida a partir de ella, como
 probabilidad de ocurrencia no ha mostrado buen desempeño.
 Frecuentemente, el algoritmo presentaba problemas de convergencia.
 
-El operador de torneo, o la selección determínistica del más apto en
-grupos conformados de forma aleatoria, ha mostrado mejores resultado y
-es la que esta instancia del algoritmo genético emplea. Es, además,
-fácilmente ajustable: la presión de selección aumenta con el tamaño del
-torneo. Torneos grandes atentan contra la diversidad del pool genético y
-deben evitarse.
+El operador de torneo, que consiste en la selección determínistica del
+más apto en grupos de tamaño fijo (y ajustable) conformados de forma
+aleatoria, tantas veces como individuos hay en la población, ha mostrado
+mejores resultado y es la que esta instancia del algoritmo genético
+emplea. Es, además, fácilmente ajustable: la presión de selección
+aumenta con el tamaño del torneo. Torneos grandes atentan contra la
+diversidad del pool genético y deben evitarse.
 
 \subparagraph{Cruza}\label{cruza}
 
-El operador de cruza debe, en promedio, favorecer la reproducción de los
-genes más aptos.
+El operador de cruza recombina los genes de los progenitores,
+preservando⁵ los genes deseables o aptos y eventualmente combinándolos
+en su descendencia.
 
 Los operadores de cruza binaria, como ser el de corte en uno o dos
-puntos aplicados sobre la secuencia completa de coeficientes, no ha
-mostrado buen desempeño, probablemente atribuible a la elevada
-variabilidad que introducen en el punto de corte (considerando el peso
-desigual de cada bit en una representación numérica binaria) y
-únicamente en el punto de corte.
+puntos aplicados sobre la secuencia completa de coeficientes, no han
+mostrado buen desempeño, probablemente atribuible a la baja
+recombinación de singularidades (polos o ceros) que pueden inducir un
+algunos cortes en la larga secuencia binaria de coeficientes y las
+significativa mutaciones que provocan en los puntos de corte.
 
-La cruza uniforme de secciones de segundo orden, es decir el intercambio
+La cruza uniforme de secciones bicuadráticas, es decir el intercambio
 probable de a pares ordenados de secciones de los progenitores para dar
 origen a su descendencia, ha mostrado mejores resultados. Más aún, la
 cruza uniforme de numeradores y denominadores de la función
@@ -632,18 +634,23 @@ aún mejores resultados y es la que esta instancia del algoritmo genético
 emplea. Se observa que este operador favorece el intercambio de polos y
 ceros y su redistribución.
 
+⁵ Si los genes no son preservados, el operador se torna una forma más de
+mutación.
+
 \subparagraph{Mutación}\label{mutaciuxf3n}
 
-El operador de mutación debe introducir, en promedio, ligeras
-perturbaciones en los genes que eviten el estancamiento en máximos
-locales y contribuyan a la exploración del espacio de soluciones.
+El operador de mutación introducen (en principio) pequeñas
+perturbaciones en los genes que evitan la convergencia en extremos
+locales de la superficie de error y contribuyen a la exploración del
+universo de discurso. Este operador mantiene la diversidad genética.
 
 Los operadores de mutación binaria, como ser la inversión de bits, no
 han mostrado buen desempeño, probablemente atribuible al peso desigual
 de cada bit en una representación numérica binaria y el consiguiente
 efecto en la magnitud de las perturbaciones (notar el impacto de la
-inversión de bit menos significativo comparado con el impacto de la
-inversión del bit más significativo o incluso el de signo).
+inversión del bit menos significativo comparado con el impacto de la
+inversión del bit más significativo o incluso el de signo). Se pierde
+control de la magnitud de la mutación.
 
 La adición de una perturbación como variable aleatoria de distribución
 normal a los coeficientes, entendidos como valores numéricos, ha
@@ -669,12 +676,12 @@ y su recíproco, se aplica el criterio de estabilidad de Jury-Marden, que
 garantiza que dicha función transferencia es estable si:
 
 
-\begin{equation}
+\begin{gather*}
 a_0 = 1 \\
 \|a_2\| < 1 \\
 a_2 > a_1 - 1, a_1 \geq 0 \\
 a_2 > -a_1 - 1, a_1 < 0
-\end{equation}
+\end{gather*}
 
 
 Adicionalmente, y pese a que el algoritmo no intenta minimizar orden,
@@ -689,11 +696,11 @@ aleatorio del proceso evolutivo.
 
 \subparagraph{Propagación elitista}\label{propagaciuxf3n-elitista}
 
-Para mejorar la convergencia, el recambio generacional de la población
-se ha modificado, introduciendo una proporción de individuos de la
-población, los más aptos (o la \emph{elite}), en su descendencia y
-seleccionando a los mejores del conjunto unión para la próxima
-generación.
+Para mejorar la convergencia, pero limitando la exploración en el
+proceso, el recambio generacional de la población se ha modificado
+introduciendo una proporción de individuos de la población, los más
+aptos (o la \emph{elite}), en su descendencia y seleccionando a los
+mejores del conjunto unión para la próxima generación.
 
 Esta proporción y el tamaño de los grupos de selección por torneo están
 fuertemente ligados. Torneos grandes con una proporción de individuos de
@@ -1321,7 +1328,7 @@ Una de muchas ventanas es la de Hamming:
 w[k] = 0.53836 - 0.46164 \cos\Bigl(\frac{2 \pi k}{N - 1}\Bigr)
 \]
 
-donde \(0 \leq k < N\). Esta ventana es similar una ventana de coseno
+donde \(0 \leq k < N\). Esta ventana es similar a una ventana de coseno
 elevado pero, a diferencia de ésta, cancela el primer lóbulo de la
 respuesta.
 
