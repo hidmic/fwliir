@@ -1,199 +1,192 @@
 \documentclass[11pt, journal]{IEEEtran}
+\bibliographystyle{IEEEtran}
+
+\usepackage[breakable]{tcolorbox}
+\tcbset{nobeforeafter} % prevents tcolorboxes being placing in paragraphs
+\usepackage{float}
+\floatplacement{figure}{H} % forces figures to be placed at the correct location
+
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+% Nicer default font (+ math font) than Computer Modern for most use cases
+\usepackage{mathpazo}
+
+% Basic figure setup, for now with no caption control since it's done
+% automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+\usepackage{graphicx}
+% We will generate all images so they have a width \maxwidth. This means
+% that they will get their normal width if they fit onto the page, but
+% are scaled down if they would overflow the margins.
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+\else\Gin@nat@width\fi}
+\makeatother
+\let\Oldincludegraphics\includegraphics
+% Set max figure width to be 80% of text width, for now hardcoded.
+\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+% Ensure that by default, figures have no caption (until we provide a
+% proper Figure object with a Caption API and a way to capture that
+% in the conversion process - todo).
+\usepackage[font=footnotesize,justification=centering]{caption}
+\addto\captionsspanish{\renewcommand{\figurename}{Fig.}}
+
+\usepackage{adjustbox} % Used to constrain images to a maximum size 
+\usepackage{xcolor} % Allow colors to be defined
+\usepackage{enumerate} % Needed for markdown enumerations to work
+\usepackage{geometry} % Used to adjust the document margins
+\usepackage{amsmath} % Equations
+\usepackage{amssymb} % Equations
+\usepackage{textcomp} % defines textquotesingle
+% Hack from http://tex.stackexchange.com/a/47451/13684:
+\AtBeginDocument{%
+    \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+}
+\usepackage{upquote} % Upright quotes for verbatim code
+\usepackage{eurosym} % defines \euro
+\usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+\usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+\usepackage{fancyvrb} % verbatim replacement that allows latex
+\usepackage{grffile} % extends the file name processing of package graphics 
+                     % to support a larger range 
+% The hyperref package gives us a pdf with properly built
+% internal navigation ('pdf bookmarks' for the table of contents,
+% internal cross-reference links, web links for URLs, etc.)
+\usepackage{hyperref}
+\usepackage{booktabs}  % table support for pandoc > 1.12.2
+\usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+\usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                            % normalem makes italics be italics, not underlines
+\usepackage{mathrsfs}
+
+% Colors for the hyperref package
+\definecolor{urlcolor}{rgb}{0,.145,.698}
+\definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+\definecolor{citecolor}{rgb}{.12,.54,.11}
+
+% ANSI colors
+\definecolor{ansi-black}{HTML}{3E424D}
+\definecolor{ansi-black-intense}{HTML}{282C36}
+\definecolor{ansi-red}{HTML}{E75C58}
+\definecolor{ansi-red-intense}{HTML}{B22B31}
+\definecolor{ansi-green}{HTML}{00A250}
+\definecolor{ansi-green-intense}{HTML}{007427}
+\definecolor{ansi-yellow}{HTML}{DDB62B}
+\definecolor{ansi-yellow-intense}{HTML}{B27D12}
+\definecolor{ansi-blue}{HTML}{208FFB}
+\definecolor{ansi-blue-intense}{HTML}{0065CA}
+\definecolor{ansi-magenta}{HTML}{D160C4}
+\definecolor{ansi-magenta-intense}{HTML}{A03196}
+\definecolor{ansi-cyan}{HTML}{60C6C8}
+\definecolor{ansi-cyan-intense}{HTML}{258F8F}
+\definecolor{ansi-white}{HTML}{C5C1B4}
+\definecolor{ansi-white-intense}{HTML}{A1A6B2}
+\definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+\definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+% commands and environments needed by pandoc snippets
+% extracted from the output of `pandoc -s`
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
     
-    \usepackage[breakable]{tcolorbox}
-    \tcbset{nobeforeafter} % prevents tcolorboxes being placing in paragraphs
-    \usepackage{float}
-    \floatplacement{figure}{H} % forces figures to be placed at the correct location
-    
-    \usepackage[T1]{fontenc}
-    % Nicer default font (+ math font) than Computer Modern for most use cases
-    \usepackage{mathpazo}
+% Define a nice break command that doesn't care if a line doesn't already
+% exist.
+\def\br{\hspace*{\fill} \\* }
+% Math Jax compatibility definitions
+\def\gt{>}
+\def\lt{<}
+\let\Oldtex\TeX
+\let\Oldlatex\LaTeX
+\renewcommand{\TeX}{\textrm{\Oldtex}}
+\renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+% Document parameters
+% Document title
+\title{Aplicación de algoritmos genéticos al diseño de filtros IIR en punto fijo}
+\author{Michel Hidalgo\\Dto. Electrónica UTN FRBA\\hid.michel@gmail.com}
+% Exact colors from NB
+\definecolor{incolor}{HTML}{303F9F}
+\definecolor{outcolor}{HTML}{D84315}
+\definecolor{cellborder}{HTML}{CFCFCF}
+\definecolor{cellbackground}{HTML}{F7F7F7}
 
-    % Basic figure setup, for now with no caption control since it's done
-    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
-    \usepackage{graphicx}
-    % We will generate all images so they have a width \maxwidth. This means
-    % that they will get their normal width if they fit onto the page, but
-    % are scaled down if they would overflow the margins.
-    \makeatletter
-    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
-    \else\Gin@nat@width\fi}
-    \makeatother
-    \let\Oldincludegraphics\includegraphics
-    % Set max figure width to be 80% of text width, for now hardcoded.
-    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
-    % Ensure that by default, figures have no caption (until we provide a
-    % proper Figure object with a Caption API and a way to capture that
-    % in the conversion process - todo).
-    \usepackage{caption}
-    \DeclareCaptionLabelFormat{nolabel}{}
-    \captionsetup{labelformat=nolabel}
+% Prevent overflowing lines due to hard-to-break entities
+\sloppy 
+% Setup hyperref package
+\hypersetup{
+  breaklinks=true,  % so long urls are correctly broken across lines
+  colorlinks=true,
+  urlcolor=urlcolor,
+  linkcolor=linkcolor,
+  citecolor=citecolor,
+  }
+% Slightly bigger margins than the latex defaults
 
-    \usepackage{adjustbox} % Used to constrain images to a maximum size 
-    \usepackage{xcolor} % Allow colors to be defined
-    \usepackage{enumerate} % Needed for markdown enumerations to work
-    \usepackage{geometry} % Used to adjust the document margins
-    \usepackage{amsmath} % Equations
-    \usepackage{amssymb} % Equations
-    \usepackage{textcomp} % defines textquotesingle
-    % Hack from http://tex.stackexchange.com/a/47451/13684:
-    \AtBeginDocument{%
-        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
-    }
-    \usepackage{upquote} % Upright quotes for verbatim code
-    \usepackage{eurosym} % defines \euro
-    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
-    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
-    \usepackage{fancyvrb} % verbatim replacement that allows latex
-    \usepackage{grffile} % extends the file name processing of package graphics 
-                         % to support a larger range 
-    % The hyperref package gives us a pdf with properly built
-    % internal navigation ('pdf bookmarks' for the table of contents,
-    % internal cross-reference links, web links for URLs, etc.)
-    \usepackage{hyperref}
-    \usepackage{booktabs}  % table support for pandoc > 1.12.2
-    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
-    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
-                                % normalem makes italics be italics, not underlines
-    \usepackage{mathrsfs}
-    
-    % Colors for the hyperref package
-    \definecolor{urlcolor}{rgb}{0,.145,.698}
-    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
-    \definecolor{citecolor}{rgb}{.12,.54,.11}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
 
-    % ANSI colors
-    \definecolor{ansi-black}{HTML}{3E424D}
-    \definecolor{ansi-black-intense}{HTML}{282C36}
-    \definecolor{ansi-red}{HTML}{E75C58}
-    \definecolor{ansi-red-intense}{HTML}{B22B31}
-    \definecolor{ansi-green}{HTML}{00A250}
-    \definecolor{ansi-green-intense}{HTML}{007427}
-    \definecolor{ansi-yellow}{HTML}{DDB62B}
-    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
-    \definecolor{ansi-blue}{HTML}{208FFB}
-    \definecolor{ansi-blue-intense}{HTML}{0065CA}
-    \definecolor{ansi-magenta}{HTML}{D160C4}
-    \definecolor{ansi-magenta-intense}{HTML}{A03196}
-    \definecolor{ansi-cyan}{HTML}{60C6C8}
-    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
-    \definecolor{ansi-white}{HTML}{C5C1B4}
-    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
-    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
-    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+\begin{document}
 
-    % commands and environments needed by pandoc snippets
-    % extracted from the output of `pandoc -s`
-    \providecommand{\tightlist}{%
-      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-        
-    % Define a nice break command that doesn't care if a line doesn't already
-    % exist.
-    \def\br{\hspace*{\fill} \\* }
-    % Math Jax compatibility definitions
-    \def\gt{>}
-    \def\lt{<}
-    \let\Oldtex\TeX
-    \let\Oldlatex\LaTeX
-    \renewcommand{\TeX}{\textrm{\Oldtex}}
-    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
-    % Document parameters
-    % Document title
-    \title{Aplicación de algoritmos genéticos al diseño de filtros IIR en punto fijo}
-    \author{Michel Hidalgo\\Dto. Electrónica UTN FRBA\\hid.michel@gmail.com}
-    % Exact colors from NB
-    \definecolor{incolor}{HTML}{303F9F}
-    \definecolor{outcolor}{HTML}{D84315}
-    \definecolor{cellborder}{HTML}{CFCFCF}
-    \definecolor{cellbackground}{HTML}{F7F7F7}
-    
-    % Prevent overflowing lines due to hard-to-break entities
-    \sloppy 
-    % Setup hyperref package
-    \hypersetup{
-      breaklinks=true,  % so long urls are correctly broken across lines
-      colorlinks=true,
-      urlcolor=urlcolor,
-      linkcolor=linkcolor,
-      citecolor=citecolor,
-      }
-    % Slightly bigger margins than the latex defaults
-    
-    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
-    
-    \begin{document}
+\maketitle
 
-    \maketitle
+\begin{abstract}
 
-    \begin{abstract}
-
-    El desempeño de los filtros digitales en general, y de los filtros de
-respuesta impulsional infinita o IIR en particular¹, se ve afectado por
-las representaciones numéricas finitas utilizadas para su
-implementación. Las herramientas de análisis y síntesis típicas²,
-lineales, no intentan modelar los efectos que impone una aritmética con
-restricciones³. Ésto se torna particularmente notorio en
-representaciones de punto fijo de relativo bajo número de bits⁴
--valiosas por su sencillez, reducido costo y alta velocidad-, al punto
-de deformar completamente la respuesta del filtro proyectado.
-
-Se vuelve necesario recurrir a otros métodos para arribar a una solución
-satisfactoria, maximizando una métrica cuantificable de ese grado de
-satisfacción, en ocasiones en detrimento de otros aspectos de la
-solución. Los algoritmos genéticos, una subclase dentro del conjunto de
-algoritmos evolutivos, llevan a cabo esta búsqueda mediante operaciones
-inspiradas en el proceso de selección natural. De carácter
-probabilístico, no garantizan la solución óptima pero permiten la
-exploración de universos de discurso extensos en un tiempo acotado.
-
-¹ Por caso, la realimentación combinada con operatorias de truncado y
-desborde puede resultar en oscilasciones sostenidas.
-
-² Por caso, la transformada Z y el mapeo bilineal en tándem con
-\emph{frequency warping} para extender soluciones en tiempo continuo a
-tiempo discreto.
-
-³ Producto de acumuladores finitos para albergar los resultados
-parciales de sumas y multiplicaciones, el redondeo, truncado y/o
-saturación necesarios para mantener el resultado en valores
-representables, etc.
-
-⁴ Conforme el número de bits crece y se abandona el punto fijo por el
-punto flotante, la discrepancia entre representación continua y discreta
-se vuelve despreciable.
-
+  El desempeño de los filtros digitales en general, y de los filtros de
+  respuesta impulsional infinita o IIR en particular\footnote{Por caso, la realimentación
+    combinada con operatorias de truncado y desborde puede resultar en oscilasciones sostenidas.},
+  se ve afectado por las representaciones numéricas finitas utilizadas para su implementación.
+  Las herramientas de análisis y síntesis típicas\footnote{Por caso, la transformada Z y el
+    mapeo bilineal en tándem con \emph{frequency warping} para extender soluciones en tiempo
+    continuo a tiempo discreto.}, lineales, no intentan modelar los efectos que impone una
+  aritmética con restricciones\footnote{Producto de acumuladores finitos para albergar los
+    resultados parciales de sumas y multiplicaciones, el redondeo, truncado y/o saturación
+    necesarios para mantener el resultado en valores representables, etc.}. Ésto se torna
+  particularmente notorio en representaciones de punto fijo de relativo bajo número de
+  bits\footnote{Conforme el número de bits crece y se abandona el punto fijo por el
+    punto flotante, la discrepancia entre representación continua y discreta se vuelve
+    despreciable.} (valiosas por su sencillez, reducido costo y alta velocidad), al punto de
+  deformar completamente la respuesta del filtro proyectado. Se vuelve necesario recurrir a
+  otros métodos para arribar a una solución satisfactoria, maximizando una métrica cuantificable
+  de ese grado de satisfacción, en ocasiones en detrimento de otros aspectos de la solución.
+  Los algoritmos genéticos, una subclase dentro del conjunto de algoritmos evolutivos, llevan a
+  cabo esta búsqueda mediante operaciones inspiradas en el proceso de selección natural.
+  De carácter probabilístico, no garantizan la solución óptima pero permiten la exploración de
+  universos de discurso extensos en un tiempo acotado.
+  
 \end{abstract}
 
-    \section{Estudio preliminar}\label{estudio-preliminar}
+\def\IEEEkeywordsname{Palabras Clave}
 
-    \subsection{Procesamiento digital de señales}\label{procesamiento-digital-de-seuxf1ales}
+\begin{IEEEkeywords}
+  aproximación, algoritmo genético, filtros IIR, secciones bicuadráticas, punto fijo.
+\end{IEEEkeywords}
 
-\subsubsection{Filtrado en tiempo discreto}\label{filtrado-en-tiempo-discreto}
+\section{Estudio preliminar}
+
+\subsection{Procesamiento digital de señales}
+
+\subsubsection{Filtrado en tiempo discreto}
 
 Todo filtro puede ser descripto por su ecuación en diferencias:
 
-\begin{equation}
+\begin{equation*}
 y[k] = \sum^N_{n = 0} b_n \cdot x[k - n] - \sum^M_{m = 1} a_m \cdot y[k - m]
-\end{equation}
+\end{equation*}
 
 Esta ecuación permite computar la respuesta muestra a muestra (respuesta
 temporal si se asume un período de muestreo \(t_s\) dado) e indica la
 estructura más simple (directa) del filtro.
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_6_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\linewidth}}{output_6_0.png}
+  \caption{Diagrama en bloques de filtro IIR en forma directa.}
+\end{figure}
 
-    Asumiendo coeficientes \(b_n\) y \(a_m\) invariantes en el tiempo, la
+Asumiendo coeficientes \(b_n\) y \(a_m\) invariantes en el tiempo, la
 transformada Z de la ecuación en diferencias resulta:
 
-
-\begin{equation}
-\frac{Y(z)}{X(z)} = \frac{\sum^N_{n = 0} b_n \cdot z^{-n}}{1 + \sum^M_{m = 1} a_m \cdot z^{-m}} \\ 
-z = re^{j\Omega}
-\end{equation}
+\begin{gather*}
+  \frac{Y(z)}{X(z)} = \frac{\sum^N_{n = 0} b_n \cdot z^{-n}}{1 + \sum^M_{m = 1} a_m \cdot z^{-m}} \\\\
+  z = re^{j\Omega}
+\end{gather*}
 
 Las raíces del polinomio numerador de coeficientes \(b_n\) constituyen
 los denominados ceros \(z_n\) de esta función transferencia y las raíces
@@ -201,7 +194,7 @@ del polinomio denominador de coeficientes \(a_m\) constituyen los polos
 \(p_m\). Para \(\|z\| = r = 1\), obtenemos la respuesta en frecuencia
 del filtro (esto es, la transformada de Fourier en tiempo discreto).
 
-    \subsubsection{Efectos de la representación numérica}
+\subsubsection{Efectos de la representación numérica}
 
 Los valores de entrada \(x[k]\), de salida \(y[k]\), y coeficientes
 \(b_n\) y \(a_m\) deben ser representados en forma binaria para su
@@ -224,19 +217,20 @@ Cada una de estas operatorias no lineales reduce el rango dinámico
 efectivo de la representación y distorsiona el filtro predeterminado por
 otros medios.
 
-    \subsection{Algoritmo genético}
+\newpage
+
+\subsection{Algoritmo genético}
 
 En su forma más simple, un algoritmo de esta clase puede ser descripto
 por el siguiente diagrama de flujo:
 
-    
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.75\paperheight}}{output_10_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_10_0.png}
+  \caption{Diagrama de flujo de algoritmo genético básico.}
+\end{figure}
 
-    Una población inicial de individuos, en principio generada de forma
+Una población inicial de individuos, en principio generada de forma
 aleatoria (pero bien puede ser el resultado de conocimiento o procesos
 previos), es seleccionada en función de la aptitud de su fenotipo (o
 conjunto de características observables) y luego sometida a operadores
@@ -257,9 +251,9 @@ genes más aptos a través de las generaciones, etc., al punto de exhibir
 severos problemas de convergencia si el delicado balance entre los
 factores involucrados se ve afectado.
 
-    \section{Aplicación}
+\section{Aplicación}
 
-    \subsection{Algoritmo}
+\subsection{Algoritmo}
 
 \subsubsection{Genotipo (o representación)}
 
@@ -285,22 +279,21 @@ por una cascada de secciones bicuadráticas
 \([SOS_0, SOS_1, ..., SOS_i]\), donde la ecuación en diferencias de la
 sección \(SOS_i\) es:
 
-
-\begin{equation}
-y_i[k] = c_0 \cdot \Bigl( b_0 \cdot x_i[k] + b_1 \cdot x_i[k-1] + b_2 \cdot x_i[k-2] - a_1 \cdot y_i[k-1] - a_2 \cdot y_i[k-2] \Bigr)
-\end{equation}
-
+\begin{align*}
+y_i[k] = c_0 \cdot \Bigl(&b_0 \cdot x_i[k] + b_1 \cdot x_i[k-1] + \\
+                         &b_2 \cdot x_i[k-2] - a_1 \cdot y_i[k-1] - \\
+                         &a_2 \cdot y_i[k-2] \Bigr)
+\end{align*}
 
 o simplemente \([b_0, b_1, b_2, a_1, a_2, c_0]\).
 
-    
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_0.png}
+  \caption{Diagrama en bloques de sección bicuadrática.}
+\end{figure}
 
-    Notar que el término \(a_0\) queda tácito, pues es siempre 1. Para
+Notar que el término \(a_0\) queda tácito, pues es siempre 1. Para
 lidiar con órdenes impares, una sección de primer orden puede
 introducirse haciendo \(b_2 = a_2 = 0\). El agregado de una ganancia de
 etapa \(c_0\) permite cambios de escala de los coeficientes a modo de
@@ -369,8 +362,9 @@ diversidad del pool genético y deben evitarse.
 
 \paragraph{Cruza}
 
-El operador de cruza recombina los genes de los progenitores,
-preservando⁵ los genes deseables o aptos y eventualmente combinándolos
+El operador de cruza recombina los genes de los progenitores, preservando
+\footnote{Si los genes no son preservados, el operador se torna una forma
+más de mutación.} los genes deseables o aptos y eventualmente combinándolos
 en su descendencia.
 
 Los operadores de cruza binaria, como ser el de corte en uno o dos
@@ -388,9 +382,6 @@ transferencia de cada sección, tomadas de a pares aleatorios ha mostrado
 aún mejores resultados y es la que esta instancia del algoritmo genético
 emplea. Se observa que este operador favorece el intercambio de polos y
 ceros y su redistribución.
-
-⁵ Si los genes no son preservados, el operador se torna una forma más de
-mutación.
 
 \paragraph{Mutación}
 
@@ -421,15 +412,12 @@ mínima (es decir, polos y ceros dentro o sobre la circunferencia unidad
 en el plano Z), asumiendo que la solución se hallará en la
 inmediaciones. Para ello, para cada sección de segundo orden:
 
-
-\begin{equation}
+\begin{equation*}
 H(z) = \frac{b(z)}{a_0 + a_1 z^{-1} + a_2 z^{-2}}
-\end{equation}
-
+\end{equation*}
 
 y su recíproco, se aplica el criterio de estabilidad de Jury-Marden, que
 garantiza que dicha función transferencia es estable si:
-
 
 \begin{gather*}
 a_0 = 1 \\
@@ -437,7 +425,6 @@ a_0 = 1 \\
 a_2 > a_1 - 1, a_1 \geq 0 \\
 a_2 > -a_1 - 1, a_1 < 0
 \end{gather*}
-
 
 Adicionalmente, y pese a que el algoritmo no intenta minimizar orden,
 filtros con distinto número de secciones son gestados y sometidos al
@@ -456,7 +443,6 @@ proceso, el recambio generacional de la población se ha modificado
 introduciendo una proporción de individuos de la población, los más
 aptos (o la \emph{elite}), en su descendencia y seleccionando a los
 mejores del conjunto unión para la próxima generación.
-
 Esta proporción y el tamaño de los grupos de selección por torneo están
 fuertemente ligados. Torneos grandes con una proporción de individuos de
 elite considerable provocan pérdida de diversidad y convergencia
@@ -467,27 +453,24 @@ prematura.
 El algoritmo avanza a la población a lo largo de un número fijo de
 generaciones.
 
-\pagebreak
+\newpage
 
-\subsubsection{Diagrama}
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_16_0.png}
+  \caption{Diagrama de flujo de algoritmo genético para la aproximación de filtro IIR.}
+\end{figure}
 
-    
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.75\paperheight}}{output_16_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\newpage
 
-    \subsection{Implementación}
+\subsection{Implementación}
 
-El algoritmo se implementó como módulo en Python 3.6, utilizando los
-paquetes \href{https://www.numpy.org/}{numpy},
-\href{https://scipy.org/}{scipy} y
-\href{https://deap.readthedocs.io/en/master/}{deap}.
+El algoritmo se implementó como módulo en Python 3.6, utilizando los paquetes \href{https://www.numpy.org/}{numpy},
+\href{https://scipy.org/}{scipy} y \href{https://deap.readthedocs.io/en/master/}{deap}.
 
 El mismo se encuentra disponible en \href{https://github.com/hidmic/fwliir}{https://github.com/hidmic/fwliir}.
 
-    \subsection{Desempeño}
+\subsection{Desempeño}
 
 A continuación, se aproximan las respuestas impulsionales de filtros
 aproximados analíticamente y se contrastan los resultados obtenidos por
@@ -495,30 +478,32 @@ el algoritmo para un filtro IIR en punto fijo 1.15 (típico Q15 de 16
 bits) con la solución cerrada. En cada una de las comparaciones que
 siguen, los siguientes parámetros permanecen constantes:
 
-\begin{table}[]{@{}ll@{}}
-\toprule
-Parámetro & Valor\tabularnewline
-\midrule
-\endhead
-Máximo orden del filtro & 10\tabularnewline
-Frecuencia de sampleo & 44 kHz\tabularnewline
-Número de bits & 16\tabularnewline
-Número de individuos & 500\tabularnewline
-Tamaño de torneo de individuos & 3\tabularnewline
-Probabilidad de cruza de individuos & 0.7\tabularnewline
-Probabilidad de cruza de num. y den. & 0.5\tabularnewline
-Probabilidad de mutación de individuos & 0.2\tabularnewline
-Probabilidad de mutación de coeficiente & 0.1\tabularnewline
-Media de perturbación & 0.0\tabularnewline
-Desvío estándar de perturbación & 0.3\tabularnewline
-Número de generaciones & 500\tabularnewline
-Proporción de elitismo & 0.5\%\tabularnewline
-Tamaño de historial de individuos & 10\tabularnewline
-\bottomrule
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{c||c}
+    \hline
+    Parámetro & Valor \\
+    \hline
+    Máximo orden del filtro & 10 \\
+    Frecuencia de sampleo & 44 kHz \\
+    Número de bits & 16 \\
+    Número de individuos & 500 \\
+    Tamaño de torneo de individuos & 3 \\
+    Probabilidad de cruza de individuos & 0.7 \\
+    Probabilidad de cruza de num. y den. & 0.5 \\
+    Probabilidad de mutación de individuos & 0.2 \\
+    Probabilidad de mutación de coeficiente & 0.1 \\
+    Media de perturbación & 0.0 \\
+    Desvío estándar de perturbación & 0.3 \\
+    Número de generaciones & 500 \\
+    Proporción de elitismo & 0.5\% \\
+    Tamaño de historial de individuos & 10 \\
+    \hline
+  \end{tabular}
+  \caption{Parámetros base del algoritmo}
 \end{table}
 
-
-    \subsubsection{Filtro pasa bajo tipo Butterworth}
+\subsubsection{Filtro pasa bajo tipo Butterworth}
 
 La aproximación de Butterworth logra máxima planicidad de módulo de
 respuesta en la banda de paso, a costa de menor pendiente en la banda de
@@ -534,30 +519,32 @@ De \(\omega\) se mapea a \(s = \sigma + j\omega\), para luego arribar a
 \(s = \frac{2}{t_s} \frac{z - 1}{z + 1}\) y posterior correción por
 \emph{frequency warping}.
 
-Se diseña entonces un filtro pasa bajos con atenuación de
-\(\leq 1 dB @ 6.6 kHz\) y de \(\geq 40 dB @ 13.2 kHz\), para luego
+Se diseña entonces un filtro pasa bajos con atenuación
+\(\leq 1 dB\ @\ 6.6 kHz\) y \(\geq 40 dB\ @\ 13.2 kHz\), para luego
 utilizar la respuesta impulsional resultante para aproximar la
 implementación con filtro IIR en punto fijo \(1.15\).
 
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_23_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\linewidth}}{output_23_0.png}
+  \caption{Respuesta temporal y en frecuencia del filtro pasa bajo Butterworth aproximado.}
+\end{figure}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_24_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\linewidth}}{output_24_0.png}
+  \caption{Distribución de singularidades del filtro pasa bajo Butterworth aproximado.}
+\end{figure}
+\vfill\null
+\newpage
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\linewidth}}{output_25_0.png}
+  \caption{Evolución de la aptitud la población de filtros pasa bajo.}
+\end{figure}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_25_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \subsubsection{Filtro pasa alto tipo Chebyshev}
+\subsubsection{Filtro pasa alto tipo Chebyshev}
 
 La aproximación de Chebyshev minimiza el error respecto a la plantilla
 de módulo de atenuación a costa de ripple en la banda de paso. Para el
@@ -570,13 +557,11 @@ describirse mediante:
 
 donde
 
-
-\begin{align}
+\begin{align*}
 T_0(x) &= 0 \\
 T_1(x) &= 1 \\
 T_{n+1}(x) &= 2x T_n(x) - T_{n-1}(x)
-\end{align}
-
+\end{align*}
 
 son los polinomios de Chebyshev del primer tipo.
 
@@ -585,30 +570,32 @@ de transformación \(s = \frac{1}{s'}\), para luego arribar a \(z\) vía
 transformada bilineal \(s' = \frac{2}{t_s} \frac{z - 1}{z + 1}\) y
 posterior correción por \emph{frequency warping}.
 
-Se diseña entonces un filtro pasa altos con atenuación de
-\(\geq 40 dB @ f = 6.6 kHz\) y de \(\leq 3 dB @ f = 13.2 kHz\), para
+Se diseña entonces un filtro pasa altos con atenuación
+\(\geq 40 dB\ @\ f = 6.6 kHz\) y \(\leq 3 dB\ @\ f = 13.2 kHz\), para
 luego utilizar la respuesta impulsional resultante para aproximar la
 implementación con filtro IIR en punto fijo \(1.15\).
 
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_28_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\linewidth}}{output_28_0.png}
+  \caption{Respuesta temporal y en frecuencia del filtro pasa alto Chebyshev aproximado.}
+\end{figure}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_29_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\linewidth}}{output_29_0.png}
+  \caption{Distribución de singularidades del filtro pasa alto Chebyshev aproximado.}
+\end{figure}
+\vfill\null
+\newpage    
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\linewidth}}{output_30_0.png}
+  \caption{Evolución de la aptitud de la población de filtros pasa alto.}
+\end{figure}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_30_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \subsubsection{Filtro pasa banda tipo Chebyshev Inverso}
+\subsubsection{Filtro pasa banda tipo Chebyshev Inverso}
 
 La aproximación de Chebyshev inversa no presenta ripple en la banda de
 paso sino en la banda de atenuación, a costa de una pendiente en la
@@ -621,12 +608,11 @@ continuo, esta aproximación puede describirse mediante:
 
 donde
 
-
-\begin{align}
+\begin{align*}
 T_0(x) &= 0 \\
 T_1(x) &= 1 \\
 T_{n+1}(x) &= 2x T_n(x) - T_{n-1}(x)
-\end{align}
+\end{align*}
 
 
 son los polinomios de Chebyshev del primer tipo.
@@ -638,30 +624,32 @@ para luego arribar a \(z\) vía transformada bilineal
 \emph{frequency warping}.
 
 Se diseña entonces un filtro pasa banda con atenuación
-\(\leq 1 dB @ 6.6 kHz < f < 8.8 kHz\) y
-\(\geq 40 dB @ f > 13.2 kHz \lor f < 2.2 kHz\), para luego utilizar la
+\(\leq 1 dB\ @\ 6.6 kHz < f < 8.8 kHz\) y
+\(\geq 40 dB\ @\ f > 13.2 kHz \lor f < 2.2 kHz\), para luego utilizar la
 respuesta impulsional resultante para aproximar la implementación con
 filtro IIR en punto fijo \(1.15\).
 
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_33_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\linewidth}}{output_33_0.png}
+  \caption{Respuesta temporal y en frecuencia del filtro pasa banda Chebyshev inverso aproximado.}
+\end{figure}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_34_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\linewidth}}{output_34_0.png}
+  \caption{Distribución de singularidades del filtro pasa banda Chebyshev inverso aproximado.}
+\end{figure}
+\vfill\null
+\newpage
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}{0.9\linewidth}}{output_35_0.png}
+  \caption{Evolución de la aptitud de la población de filtros pasa banda.}
+\end{figure}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_35_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \subsubsection{Filtro multi banda tipo FIR con ventana Hamming}
+\subsubsection{Filtro multi banda tipo FIR con ventana Hamming}
 
 Los filtros FIR o de respuesta impulsional finita pueden ser descriptos
 empleando la ecuación en diferencias de los filtros IIR con
@@ -693,26 +681,26 @@ Se diseña entonces un filtro multi banda con \(T = 64\) coeficientes o
 resultante para aproximar la implementación con filtro IIR en punto fijo
 \(1.15\).
 
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}}{output_38_0.png}
+  \caption{Respuesta temporal y en frecuencia del filtro multi banda FIR aproximado.}
+\end{figure}
 
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}}{output_39_0.png}
+  \caption{Distribución de singularidades del filtro multi banda FIR aproximado.}
+\end{figure}
+\vfill\null
+\newpage
+\begin{figure}
+  \centering
+  \adjustimage{max size={0.9\linewidth}}{output_40_0.png}
+  \caption{Evolución de la aptitud de la población de filtros multi banda.}
+\end{figure}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_38_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_39_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_40_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \section{Conclusiones}
+\section{Conclusiones}
 
 Se ha descripto un algoritmo capaz de aproximar respuestas
 impulsionales, y con menor exactitud la respuesta en frecuencia
@@ -751,15 +739,22 @@ balance entre diversidad genética y presión de selección que este (tipo
 de) algoritmo requiere para converger a soluciones cuando mucho
 subóptimas sin tornarse una búsqueda por fuerza bruta aleatoria.
 
-\section{Referencias}
+\begin{thebibliography}{9}
 
-{[}1{]} R. Lyons, Understanding digital signal processing. Upper Saddle
-River {[}etc.{]}: Pearson Education International, 2013.
+\bibitem{lyons13}
+  R. Lyons,
+  \textit{Understanding digital signal processing},
+  Pearson Education Inc.,
+  3rd Edition,
+  2013.
 
-{[}2{]} A. EIBEN, Introduction To Evolutionary Computing:
-SPRINGER-VERLAG BERLIN AN, 2016.
+\bibitem{eiben16}
+  A.E. Eiben and J.E. Smith,
+  \textit{Introduction To Evolutionary Computing},
+  Springer-Verlag Berlin,    
+  2nd Edition,
+  2016
 
-    % Add a bibliography block to the postdoc
-    
-    
+\end{thebibliography}
+
 \end{document}
